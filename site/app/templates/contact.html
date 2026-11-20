@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, err, send %}
+{% block title %}Contact – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Contact", "Contact us", "Call or text Ben or Ash, or send us a message below.") }}
+<section><div class="wrap two">
+ <div>
+  <div class="cgrid">
+   {% for n, p in biz.phones %}<div class="ccard"><div class="ic">{{ icon('phone') }}</div><div><small>{{ n }}</small><b>{{ p }}</b></div><a class="btn btn-line btn-sm" style="margin-left:auto" href="tel:{{ p|replace(' ','') }}">Call</a></div>{% endfor %}
+   <div class="ccard"><div class="ic">{{ icon('pin') }}</div><div><small>Service area</small><b>{{ biz.area }}</b></div></div>
+  </div>
+  <form class="panel form" id="form" method="post" action="/contact" style="margin-top:22px" novalidate>
+   <input type="hidden" name="csrf" value="{{ csrf }}">
+   <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+   <h3>Send us a message</h3><p class="note" style="margin-bottom:18px">General questions, plans or anything else.</p>
+   <div class="row2">
+    <div class="f {{ 'bad' if errors.full_name }}"><label for="c_name">Full name</label><input class="inp" id="c_name" name="full_name" value="{{ form.full_name or '' }}" autocomplete="name">{{ err(errors,'full_name') }}</div>
+    <div class="f"><label for="c_phone">Phone</label><input class="inp" id="c_phone" name="phone" type="tel" value="{{ form.phone or '' }}" autocomplete="tel"></div>
+   </div>
+   <div class="f {{ 'bad' if errors.email }}"><label for="c_email">Email</label><input class="inp" id="c_email" name="email" type="email" value="{{ form.email or '' }}" autocomplete="email">{{ err(errors,'email') }}</div>
+   <div class="f {{ 'bad' if errors.message }}"><label for="c_msg">Message</label><textarea class="inp ta" id="c_msg" name="message" style="height:110px" placeholder="How can we help?">{{ form.message or '' }}</textarea>{{ err(errors,'message') }}</div>
+   {{ send("Send message", "btn-blue") }}
+  </form>
+ </div>
+ <div class="map">
+  <svg viewBox="0 0 500 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+   <rect width="500" height="520" fill="#E6EEF5"/><path d="M0 0h150c-20 80 10 150-20 230s20 160-10 290H0z" fill="#BFD7EA"/>
+   <path d="M150 300c60-10 90 20 140 0s70-40 120-20" stroke="#BFD7EA" stroke-width="16" fill="none"/>
+   <g stroke="#fff" stroke-width="5" fill="none"><path d="M200 0v520M330 0l-40 520M150 120h350M140 400h360M200 220l300 60"/></g>
+   <g stroke="#D3DFEA" stroke-width="2" fill="none"><path d="M250 0v520M380 0v520M450 0v520M150 60h350M150 180h350M150 340h350M150 460h350"/></g>
+   <circle cx="290" cy="250" r="150" fill="rgba(10,94,145,.10)" stroke="#0A5E91" stroke-width="2" stroke-dasharray="6 6"/>
+   <g transform="translate(290 250)"><path d="M0 0c-14-18-22-30-22-42a22 22 0 0 1 44 0c0 12-8 24-22 42z" fill="#D9692A"/><circle cy="-42" r="8" fill="#fff"/></g>
+   <text x="290" y="290" text-anchor="middle" font-family="Archivo" font-weight="700" font-size="16" fill="#073B5E">Perth</text>
+  </svg>
+ </div>
+</div></section>
+{% endblock %}

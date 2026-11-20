@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, band, workcard %}
+{% block title %}Our Work – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Our Work", "Our latest work", "A selection of recent handyman, carpentry, renovation and maintenance jobs around Perth.") }}
+<section><div class="wrap">
+ {% if not static %}<div class="tabs filter">{% for k in cats %}<a href="/work{{ '' if k == 'All' else '?cat=' ~ k }}" class="{{ 'on' if k == cat }}">{{ k }}</a>{% endfor %}</div>{% endif %}
+ <div class="row gallery">{% for w in items %}{{ workcard(w) }}{% else %}<p class="note">No projects in this category yet.</p>{% endfor %}</div>
+</div></section>
+{{ band("Have a project in mind?", "Send us photos and we'll give you a free preliminary estimate.") }}
+{% endblock %}

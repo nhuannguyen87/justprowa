@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Request received – Just Professional Services{% endblock %}
+{% block content %}
+<section><div class="wrap narrow">
+ <div class="panel center">
+  <div class="okmark">{{ icon('check') }}</div>
+  <h1 class="h2">Thanks, {{ qr.full_name.split()[0] }} — we've got your request</h1>
+  <p class="lead" style="margin:14px auto 0">Your reference is <b>{{ qr.ref }}</b>. We'll {{ {'phone':'call you','sms':'text you','email':'email you'}[qr.contact_method] }} soon. A confirmation email is on its way to {{ qr.email }}.</p>
+  <div class="ctas center-row">
+   <a class="btn btn-blue" href="/track/{{ qr.token }}">{{ icon('search') }} Track this request</a>
+   <a class="btn btn-line" href="/">Back to home</a>
+  </div>
+  <p class="note" style="margin-top:22px">Bookmark the tracking page — you'll see our reply and quote there, and can accept it online.</p>
+ </div>
+</div></section>
+{% endblock %}

@@ -7,3 +7,15 @@ node_modules
 # Generated files
 .psci
 output
+
+# JPS website
+.DS_Store
+idea/
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+site/data/
+site/dist/
+mockup/

@@ -1,0 +1,47 @@
+{% macro phero(crumb, title, lead) -%}
+<div class="phero"><div class="wrap"><div class="crumb"><a href="/">Home</a> &nbsp;/&nbsp; {{ crumb }}</div><h1>{{ title }}</h1><p class="lead">{{ lead }}</p></div></div>
+{%- endmacro %}
+
+{% macro band(title, text) -%}
+<section><div class="wrap"><div class="band">
+  <div><h2>{{ title }}</h2><p>{{ text }}</p></div>
+  <div class="ctas"><a class="btn btn-cta" href="/quote">{{ icon('file') }} Request a Quote</a><a class="btn btn-ghost" href="tel:0424595086">{{ icon('phone') }} 0424 595 086</a></div>
+</div></div></section>
+{%- endmacro %}
+
+{% macro send(label, cls="btn-cta full") -%}
+{% if static %}<p class="note">Online requests are coming soon. For now, please call or text {% for n, p in biz.phones %}{{ n }} on <a href="tel:{{ p|replace(' ','') }}">{{ p }}</a>{{ " or " if not loop.last }}{% endfor %}.</p>
+<button class="btn {{ cls }}" type="button" disabled>{{ label }}</button>
+{%- else %}<button class="btn {{ cls }}" type="submit">{{ label }} {{ icon('arrow') }}</button>{% endif %}
+{%- endmacro %}
+
+{% macro err(errors, key) -%}
+{% if errors.get(key) %}<div class="ferr">{{ errors[key] }}</div>{% endif %}
+{%- endmacro %}
+
+{% macro scene() -%}
+<svg class="scene" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+ <rect width="640" height="400" fill="#E8F0F7"/><circle cx="520" cy="90" r="46" fill="#F6D58E"/>
+ <rect y="300" width="640" height="100" fill="#C9DCC0"/><rect y="300" width="640" height="10" fill="#A9C79B"/>
+ <g transform="translate(150 120)">
+  <path d="M10 110 170 6l160 104v80H10z" fill="#fff"/>
+  <path d="M0 110 170 0l170 110" fill="none" stroke="#073B5E" stroke-width="12" stroke-linejoin="round"/>
+  <rect x="140" y="110" width="60" height="70" fill="#D9692A"/>
+  <rect x="45" y="115" width="62" height="46" fill="#9CC3E0" stroke="#073B5E" stroke-width="4"/>
+  <rect x="233" y="115" width="62" height="46" fill="#9CC3E0" stroke="#073B5E" stroke-width="4"/>
+  <path d="M76 115v46M45 138h62M264 115v46M233 138h62" stroke="#073B5E" stroke-width="3"/>
+  <rect x="250" y="20" width="26" height="50" fill="#073B5E"/>
+ </g>
+ <g transform="translate(520 210) rotate(-28)"><rect x="-6" y="0" width="12" height="90" rx="4" fill="#E2A93B"/><rect x="-26" y="-18" width="52" height="22" rx="4" fill="#3F5A8C"/></g>
+ <g fill="#4E7D2E"><circle cx="80" cy="292" r="28"/><circle cx="110" cy="282" r="22"/><circle cx="560" cy="296" r="24"/></g>
+</svg>
+{%- endmacro %}
+
+{% macro video(title, sub) -%}
+<div class="video">{{ scene() }}<div class="play" title="Video coming soon"></div><div class="cap"><b>{{ title }}</b><span>{{ sub }}</span></div></div>
+{%- endmacro %}
+
+{% macro workcard(w) -%}
+{% set g, tag, title, text, ba = w %}
+<div class="shot"><div class="ph {{ g }}">{% if ba %}<div class="ba"><div>Before</div><div>After</div></div>{% else %}{{ icon('home') }}{% endif %}<span class="tagx">{{ tag }}</span></div><div class="meta"><h3>{{ title }}</h3><p>{{ text }}</p></div></div>
+{%- endmacro %}

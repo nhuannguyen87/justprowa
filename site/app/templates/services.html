@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, band %}
+{% block title %}Services – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Services", "Our services", "Residential and commercial handyman, carpentry, house renovations and property maintenance — inside and out.") }}
+<section><div class="wrap">
+ <div class="tiles">
+  {% for ic, t, d in c.SERVICES_MAIN %}<div class="tile"><div class="ic">{{ icon(ic) }}</div><div><h3>{{ t }}</h3><p>{{ d }}</p></div></div>{% endfor %}
+ </div>
+</div></section>
+<section class="white"><div class="wrap">
+ <div class="sec-head"><div><div class="eyebrow">Property maintenance</div><h2>Outdoor &amp; indoor maintenance</h2></div><a class="btn btn-line btn-sm" href="/plans">Bundle these into a plan {{ icon('arrow') }}</a></div>
+ <div class="svc">
+  <div class="panel"><h3><span class="ic">{{ icon('sprout') }}</span>Outdoor</h3><ul>{% for s in c.SERVICES_OUTDOOR %}<li>{{ icon('check') }}{{ s }}</li>{% endfor %}</ul></div>
+  <div class="panel"><h3><span class="ic">{{ icon('home') }}</span>Indoor</h3><ul>{% for s in c.SERVICES_INDOOR %}<li>{{ icon('check') }}{{ s }}</li>{% endfor %}</ul>
+   <div class="callout" style="margin-top:28px">{{ icon('info') }}<div><b>Not sure what you need?</b><div class="note" style="margin-top:4px">Describe the issue and attach photos — we'll tell you the best option: a one-off call-out, a quote, or a plan.</div></div></div>
+  </div>
+ </div>
+</div></section>
+{{ band("Need something done?", "Book a call-out for repairs, or send photos for a free preliminary estimate.") }}
+{% endblock %}

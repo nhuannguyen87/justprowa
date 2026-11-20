@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, err, send %}
+{% block title %}Request a Quote – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Request a Quote", "Request a quote or call-out", "Tell us about your project or maintenance issue, attach a few photos, and let us know where and when. We'll get back to you quickly.") }}
+<section><div class="wrap two">
+ <form class="panel form" method="post" action="/quote" enctype="multipart/form-data" novalidate>
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+  {% if errors %}<div class="flash err">{{ icon('info') }} Please fix the highlighted fields below.</div>{% endif %}
+
+  <div class="tabs radio-tabs" role="radiogroup">
+   {% for k, label in c.REQUEST_KINDS.items() %}
+   <label><input type="radio" name="kind" value="{{ k }}" {{ 'checked' if form.kind == k }}><span>{{ label }}</span></label>
+   {% endfor %}
+  </div>
+  <p class="note kind-help" data-for="quote">For projects and renos. Clear photos let us give a free preliminary estimate.</p>
+  <p class="note kind-help" data-for="callout">Call-out: ${{ c.CALLOUT_FEE }} including the first hour, then ${{ c.CALLOUT_HOURLY }}/h + materials.</p>
+  <p class="note kind-help" data-for="subscriber">Plan members: no call-out fee and ${{ c.MEMBER_HOURLY }}/h on extra work.</p>
+
+  <div class="step"><i>1</i><b>Tell us about your project or issue</b></div>
+  <div class="f {{ 'bad' if errors.subject }}"><label for="subject">Subject</label><input class="inp" id="subject" name="subject" maxlength="200" value="{{ form.subject or '' }}" placeholder="e.g. Replace rotten decking boards">{{ err(errors,'subject') }}</div>
+  <div class="f {{ 'bad' if errors.description }}"><label for="description">Description</label><textarea class="inp ta" id="description" name="description" maxlength="5000" placeholder="Describe what needs doing, sizes or measurements if you have them…">{{ form.description or '' }}</textarea>{{ err(errors,'description') }}</div>
+
+  <div class="step"><i>2</i><b>Attach pictures or files</b></div>
+  {% if static %}
+  <div class="drop">{{ icon('upload') }}<div><b>Photo upload coming soon</b></div></div>
+  {% else %}
+  <label class="drop {{ 'bad' if errors.files }}">{{ icon('upload') }}
+   <div><b>Click to upload</b> photos, videos or PDFs</div>
+   <div style="font-size:13px;margin-top:4px">Up to 8 files, 15 MB each. Clear photos help us give a free preliminary estimate.</div>
+   <input type="file" name="files" multiple accept="image/*,video/mp4,video/quicktime,application/pdf" data-preview>
+  </label>
+  <div class="thumbs" id="thumbs"></div>
+  {{ err(errors,'files') }}
+  {% endif %}
+
+  <div class="step"><i>3</i><b>Location &amp; availability</b></div>
+  <div class="f {{ 'bad' if errors.address }}"><label for="address">Property address</label><input class="inp" id="address" name="address" maxlength="300" value="{{ form.address or '' }}" placeholder="Street address, suburb, postcode" autocomplete="street-address">{{ err(errors,'address') }}</div>
+  <div class="f"><label>Preferred days <span class="note">(choose any)</span></label>
+   <div class="slots">
+    {% for d in days %}<label class="slot"><input type="checkbox" name="days" value="{{ d.isoformat() }}" {{ 'checked' if d.isoformat() in (form.days or []) }}><span>{{ d.strftime('%a') }}<b>{{ d.day }}</b><small>{{ d.strftime('%b') }}</small></span></label>{% endfor %}
+    <label class="slot wide"><input type="checkbox" name="days" value="flexible" {{ 'checked' if 'flexible' in (form.days or []) }}><span>I'm flexible</span></label>
+   </div>
+  </div>
+
+  <div class="step"><i>4</i><b>Your contact details</b></div>
+  <div class="row2">
+   <div class="f {{ 'bad' if errors.full_name }}"><label for="full_name">Full name</label><input class="inp" id="full_name" name="full_name" value="{{ form.full_name or '' }}" autocomplete="name">{{ err(errors,'full_name') }}</div>
+   <div class="f {{ 'bad' if errors.phone }}"><label for="phone">Phone number</label><input class="inp" id="phone" name="phone" type="tel" value="{{ form.phone or '' }}" placeholder="04xx xxx xxx" autocomplete="tel">{{ err(errors,'phone') }}</div>
+  </div>
+  <div class="f {{ 'bad' if errors.email }}"><label for="email">Email</label><input class="inp" id="email" name="email" type="email" value="{{ form.email or '' }}" placeholder="you@email.com" autocomplete="email">{{ err(errors,'email') }}</div>
+  <div class="f"><label>Preferred contact method</label><div class="radios">
+   {% for k, label in c.CONTACT_METHODS.items() %}<label class="radio"><input type="radio" name="contact_method" value="{{ k }}" {{ 'checked' if (form.contact_method or 'phone') == k }}><span class="dot"></span>{{ label }}</label>{% endfor %}
+  </div></div>
+  <label class="check {{ 'bad' if errors.agree }}"><input type="checkbox" name="agree" value="1"><span class="bx">{{ icon('check') }}</span><span>I've read the <a href="/terms#quotation" target="_blank">Quotation Fee &amp; Payment Policy</a> and <a href="/terms" target="_blank">Terms &amp; Conditions</a>.</span></label>
+  {{ err(errors,'agree') }}
+  {{ send("Send my request") }}
+ </form>
+
+ <aside>
+  <div class="panel">
+   <h3>What it costs</h3><p class="note" style="margin-bottom:18px">No charges or payment terms are applied without your approval.</p>
+   <div class="fee">
+    <div class="it">{{ icon('star') }}<div><b>Free preliminary estimate</b><span>When you send a clear description with photos or videos. An on-site inspection may still be needed.</span></div></div>
+    <div class="it">{{ icon('wrench') }}<div><b>Maintenance call-out</b><div class="big">${{ c.CALLOUT_FEE }}</div><span>Includes the first hour, then ${{ c.CALLOUT_HOURLY }}/h + materials. Subscribers: no call-out fee, ${{ c.MEMBER_HOURLY }}/h.</span></div></div>
+    <div class="it">{{ icon('file') }}<div><b>Quotation fee — projects over ${{ '{:,}'.format(c.QUOTE_FEE_THRESHOLD) }}</b><div class="big">{{ c.QUOTE_FEE_PERCENT }}%</div><span>Of the estimated project cost, or for complex works. Fully deducted from your final invoice if you go ahead.</span></div></div>
+    <div class="it">{{ icon('key') }}<div><b>Selling your property?</b><span>Pay at settlement when sold through a licensed real estate agent ({{ c.SETTLEMENT_SURCHARGE }}% deferred-payment surcharge, subject to approval).</span></div></div>
+   </div>
+  </div>
+  <div class="panel callcard">
+   <div class="ic">{{ icon('phone') }}</div>
+   <div><div class="note" style="color:#9FC0DC">Prefer to talk?</div>{% for n, p in biz.phones %}<a href="tel:{{ p|replace(' ','') }}"><b>{{ n }} {{ p }}</b></a>{% if not loop.last %} · {% endif %}{% endfor %}</div>
+  </div>
+ </aside>
+</div></section>
+{% endblock %}

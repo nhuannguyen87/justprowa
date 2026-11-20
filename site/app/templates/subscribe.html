@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, err, send %}
+{% block title %}{{ plan.name }} plan – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Maintenance Plans / " ~ plan.name, plan.name ~ " plan — $" ~ plan.price ~ "/month", "Choose " ~ plan.services ~ " services for the year and tell us where your property is. We'll call to confirm your first visit and set up payment.") }}
+<section><div class="wrap two">
+ <form class="panel form" method="post" action="/subscribe/{{ plan.key }}" novalidate data-pick="{{ plan.services }}">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+  <div class="step" style="margin-top:0"><i>1</i><b>Choose {{ plan.services }} services</b> <span class="note pickcount"></span></div>
+  <div class="pick {{ 'bad' if errors.services }}">
+   {% for ic, t in c.PLAN_SERVICES %}<label class="pickitem"><input type="checkbox" name="services" value="{{ t }}" {{ 'checked' if t in (form.services or []) }}><span>{{ icon(ic) }}{{ t }}</span></label>{% endfor %}
+  </div>
+  {{ err(errors,'services') }}
+  <div class="step"><i>2</i><b>Your details</b></div>
+  <div class="row2">
+   <div class="f {{ 'bad' if errors.full_name }}"><label for="full_name">Full name</label><input class="inp" id="full_name" name="full_name" value="{{ form.full_name or '' }}" autocomplete="name">{{ err(errors,'full_name') }}</div>
+   <div class="f {{ 'bad' if errors.phone }}"><label for="phone">Phone</label><input class="inp" id="phone" name="phone" type="tel" value="{{ form.phone or '' }}" autocomplete="tel">{{ err(errors,'phone') }}</div>
+  </div>
+  <div class="f {{ 'bad' if errors.email }}"><label for="email">Email</label><input class="inp" id="email" name="email" type="email" value="{{ form.email or '' }}" autocomplete="email">{{ err(errors,'email') }}</div>
+  <div class="f {{ 'bad' if errors.address }}"><label for="address">Property address</label><input class="inp" id="address" name="address" value="{{ form.address or '' }}" autocomplete="street-address">{{ err(errors,'address') }}</div>
+  <div class="f"><label for="notes">Anything we should know? <span class="note">(optional)</span></label><textarea class="inp ta" id="notes" name="notes" style="height:90px">{{ form.notes or '' }}</textarea></div>
+  <label class="check {{ 'bad' if errors.agree }}"><input type="checkbox" name="agree" value="1"><span class="bx">{{ icon('check') }}</span><span>I've read the <a href="/terms" target="_blank">Terms &amp; Conditions</a>. My plan is a 12-month membership at ${{ plan.price }}/month.</span></label>
+  {{ err(errors,'agree') }}
+  {{ send('Continue to payment' if payments_enabled() else 'Send my plan request') }}
+ </form>
+ <aside>
+  <div class="plan {{ plan.key }} {{ 'pop' if plan.popular }}" style="transform:none">
+   <div class="tier"><span class="medal"></span>{{ plan.name }}</div>
+   <div class="price"><b>${{ plan.price }}</b><span>/ month</span></div><div class="sub">12-month membership</div>
+   <div class="count">{{ icon('calendar') }} {{ plan.services }} services a year</div>
+   <ul>{% for perk in plan.perks %}<li>{{ icon('check') }}{{ perk }}</li>{% endfor %}</ul>
+   <a class="note" href="/plans">← Compare plans</a>
+  </div>
+ </aside>
+</div></section>
+{% endblock %}

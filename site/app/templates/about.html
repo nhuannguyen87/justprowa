@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, band %}
+{% block title %}About Us – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("About Us", "About Just Professional Services", "Local Perth handymen looking after homes, rentals and commercial properties — big jobs and small.") }}
+<section><div class="wrap two">
+ <div class="letter">
+  <div class="eyebrow">Our story</div><h2 style="margin:10px 0 24px">Keeping your property in top shape</h2>
+  <p>We at Just Professional Services understand the importance of keeping any property in good condition, whether it's residential or commercial. We also understand the ever-increasing cost, time and stress involved in ongoing maintenance and repairs.</p>
+  <p>A well-presented property without damage or defects is more desirable to future tenants and owners. That's why we offer 12-month maintenance plans that take care of your property's needs all year round — from a leaking tap or a broken door lock to gutters, solar panels and gardens.</p>
+  <p>Regular visits mean we identify and address potential issues before they become major problems, giving you peace of mind.</p>
+  <p>Call us today and find out for yourself. We look forward to hearing from you.</p>
+  <div class="sig"><div class="av">B</div><div class="av" style="margin-left:-28px;border:3px solid var(--bg)">A</div><div><b>Ben &amp; Ash</b><div class="note">Just Professional Services</div></div></div>
+ </div>
+ <div>
+  <div class="panel" style="padding:0;overflow:hidden"><div class="ph g6" style="aspect-ratio:4/3">{{ icon('users') }}<span class="tagx">Team photo</span></div></div>
+  <div class="vals" style="margin-top:22px">
+   <div class="panel">{{ icon('shield') }}<h3 style="font-size:18px;margin-top:10px">Protect your investment</h3><p class="note">Well-presented property, better returns.</p></div>
+   <div class="panel">{{ icon('search') }}<h3 style="font-size:18px;margin-top:10px">Preventative care</h3><p class="note">Small fixes before big bills.</p></div>
+   <div class="panel">{{ icon('tag') }}<h3 style="font-size:18px;margin-top:10px">Transparent pricing</h3><p class="note">Nothing charged without your OK.</p></div>
+   <div class="panel">{{ icon('building') }}<h3 style="font-size:18px;margin-top:10px">Homes &amp; businesses</h3><p class="note">Residential and commercial.</p></div>
+  </div>
+ </div>
+</div></section>
+{{ band("Let's talk about your property", "Projects big or small — give us a call.") }}
+{% endblock %}

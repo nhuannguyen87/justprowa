@@ -1,0 +1,42 @@
+name: Publish website (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 20 * * *"   # daily, 4am Perth: keeps the quote form's "preferred days" dates current
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Test and build
+        working-directory: site
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          pip install -r requirements.txt
+          python -m pytest -q
+          python build_static.py dist
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: site/dist
+      - id: deploy
+        uses: actions/deploy-pages@v4

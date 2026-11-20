@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Just Professional Services – Perth Handyman, Carpentry & Property Maintenance{% endblock %}</title>
+<meta name="description" content="Residential & commercial handyman, carpentry, house renos and property maintenance plans across Perth, WA. Projects big or small — give us a call.">
+<link rel="icon" href="/static/logo.png">
+<link rel="stylesheet" href="/static/style.css?v=3">
+</head>
+<body>
+{% set nav = [('home','/','Home'),('services','/services','Services'),('plans','/plans','Maintenance Plans'),('work','/work','Our Work'),('about','/about','About Us'),('contact','/contact','Contact')] %}
+<div class="topbar"><div class="wrap">
+  <div class="l"><span>{{ icon('pin') }} Servicing the Perth metro area</span><span class="hide-sm">{{ icon('building') }} Residential &amp; Commercial</span></div>
+  <div class="r">{% for n, p in biz.phones %}<a href="tel:{{ p|replace(' ','') }}">{{ icon('phone') }} {{ n }} <b>{{ p }}</b></a>{% endfor %}</div>
+</div></div>
+<header class="site"><div class="wrap">
+  <a class="brand" href="/"><img src="/static/logo.png" alt="Just Professional Services logo" width="72" height="72">
+    <div><div class="name">JUST PROFESSIONAL<br>SERVICES</div><div class="tag">Handyman · Carpentry · House Renos</div></div></a>
+  <input type="checkbox" id="navtoggle" class="navtoggle" aria-label="Menu">
+  <label for="navtoggle" class="burger">{{ icon('menu') }}</label>
+  <nav class="main">
+    {% for key, href, label in nav %}<a href="{{ href }}" class="{{ 'on' if page == key }}">{{ label }}</a>{% endfor %}
+    <a class="btn btn-cta nav-cta" href="/quote">{{ icon('file') }} Request a Quote</a>
+  </nav>
+</div></header>
+<div class="stripe"></div>
+
+{% if flashes %}<div class="wrap flashes">{% for f in flashes %}<div class="flash {{ f.kind }}">{{ icon('check' if f.kind == 'ok' else 'info') }} {{ f.msg }}</div>{% endfor %}</div>{% endif %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer>
+ <div class="wrap">
+  <div>
+   <div class="brandf"><img src="/static/logo.png" alt=""><div class="name">Just Professional<br>Services</div></div>
+   <p style="font-size:15px;max-width:300px">Residential &amp; commercial handyman, carpentry, house renos and property maintenance across Perth. Projects big or small — give us a call.</p>
+  </div>
+  <div><h4>Explore</h4><a href="/services">Services</a><a href="/plans">Maintenance Plans</a><a href="/work">Our Work</a><a href="/about">About Us</a><a href="/contact">Contact</a></div>
+  <div><h4>Get help</h4><a href="/quote">Request a Quote</a><a href="/quote?type=callout">Book a Call-out</a><a href="/plans">Subscribe to a Plan</a><a href="/terms#quotation">Quotation Fee Policy</a><a href="/terms#settlement">Payment at Settlement</a></div>
+  <div><h4>Contact</h4>
+   {% for n, p in biz.phones %}<a class="ln" href="tel:{{ p|replace(' ','') }}">{{ icon('phone') }} {{ n }} · {{ p }}</a>{% endfor %}
+   <div class="ln">{{ icon('pin') }} Perth, Western Australia</div>
+  </div>
+ </div>
+ <div class="legal"><div class="wrap"><span>© {{ 2026 }} {{ biz.name }} · ABN {{ biz.abn }}. All rights reserved.</span><div><a href="/terms">Terms &amp; Conditions</a><a href="/terms#privacy">Privacy</a>{% if not static %}<a href="/admin">Staff login</a>{% endif %}</div></div></div>
+</footer>
+<script src="/static/js/site.js?v=3" defer></script>
+</body>
+</html>

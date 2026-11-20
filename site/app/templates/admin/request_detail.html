@@ -1,0 +1,72 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ qr.ref }}{% endblock %}
+{% block content %}
+<a class="note back" href="/admin">← All requests</a>
+<div class="ahead">
+ <div><h1>{{ qr.ref }} · {{ qr.subject }}</h1><p class="note">{{ c.REQUEST_KINDS[qr.kind] }} · received {{ qr.created_at|local }}</p></div>
+ <form method="post" action="/admin/requests/{{ qr.id }}/status" class="statusform">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <span class="badge-s s-{{ qr.status }}">{{ c.STATUSES[qr.status] }}</span>
+  <select class="inp" name="status">{% for k, l in c.STATUSES.items() %}<option value="{{ k }}" {{ 'selected' if qr.status == k }}>{{ l }}</option>{% endfor %}</select>
+  <button class="btn btn-line btn-sm">Update</button>
+ </form>
+</div>
+
+<div class="agrid">
+ <div>
+  <div class="panel">
+   <h3>Description</h3>
+   <p class="pre" style="margin-top:8px">{{ qr.description }}</p>
+   {% if qr.attachments %}
+   <h3 style="margin-top:24px">Photos &amp; files ({{ qr.attachments|length }})</h3>
+   <div class="files">
+    {% for a in qr.attachments %}
+    {% if a.is_image %}<a class="fthumb" href="/admin/files/{{ a.id }}" target="_blank"><img src="/admin/files/{{ a.id }}" alt="{{ a.original_name }}" loading="lazy"></a>
+    {% else %}<a class="fthumb file" href="/admin/files/{{ a.id }}?download=1">{{ icon('file') }}<span>{{ a.original_name }}</span></a>{% endif %}
+    {% endfor %}
+   </div>
+   {% endif %}
+  </div>
+
+  <div class="panel" style="margin-top:20px">
+   <h3>Conversation</h3>
+   {% for r in responses %}
+   <div class="msg"><div class="msg-h"><b>{{ r.author|capitalize }}</b><span class="note">{{ r.created_at|local }} · {{ 'emailed' if r.emailed else 'not emailed' }}</span></div>
+    <p class="pre">{{ r.message }}</p>{% if r.amount_cents is not none %}<div class="msg-amt">Quoted: <b>{{ r.amount_cents|money }}</b></div>{% endif %}</div>
+   {% else %}<p class="note" style="margin-top:8px">No replies yet.</p>{% endfor %}
+
+   <form id="reply" method="post" action="/admin/requests/{{ qr.id }}/reply" class="replyform">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <div class="f"><label for="message">Reply to {{ qr.full_name.split()[0] }}</label><textarea class="inp ta" id="message" name="message" placeholder="Hi {{ qr.full_name.split()[0] }}, thanks for sending the photos…"></textarea></div>
+    <div class="replyrow">
+     <div class="f"><label for="amount">Quote amount (incl. GST, optional)</label><div class="money"><span>$</span><input class="inp" id="amount" name="amount" inputmode="decimal" placeholder="0.00"></div></div>
+     <label class="check sm"><input type="checkbox" name="send" value="1" checked><span class="bx">{{ icon('check') }}</span><span>Email this reply to {{ qr.email }}</span></label>
+     <button class="btn btn-cta">{{ icon('send') }} Save reply</button>
+    </div>
+    <p class="note">Adding an amount marks the request as <b>Quote sent</b> and lets the customer accept it online.</p>
+   </form>
+  </div>
+ </div>
+
+ <aside>
+  <div class="panel">
+   <h3>Customer</h3>
+   <dl class="dl">
+    <dt>Name</dt><dd>{{ qr.full_name }}</dd>
+    <dt>Phone</dt><dd><a href="tel:{{ qr.phone|replace(' ','') }}">{{ qr.phone }}</a></dd>
+    <dt>Email</dt><dd class="brk"><a href="mailto:{{ qr.email }}">{{ qr.email }}</a></dd>
+    <dt>Prefers</dt><dd>{{ c.CONTACT_METHODS[qr.contact_method] }}</dd>
+    <dt>Address</dt><dd><a href="https://maps.google.com/?q={{ qr.address|urlencode }}" target="_blank">{{ qr.address }}</a></dd>
+    <dt>Preferred days</dt><dd>{{ qr.preferred_days|days }}</dd>
+   </dl>
+   <div class="f" style="margin-top:14px"><label>Customer tracking link</label><input class="inp" readonly value="{{ track_url }}" onclick="this.select()"></div>
+  </div>
+  <form class="panel" style="margin-top:20px" method="post" action="/admin/requests/{{ qr.id }}/notes">
+   <input type="hidden" name="csrf" value="{{ csrf }}">
+   <h3>Internal notes</h3><p class="note" style="margin-bottom:10px">Only staff can see these.</p>
+   <textarea class="inp ta" name="notes" style="height:130px">{{ qr.admin_notes }}</textarea>
+   <button class="btn btn-line btn-sm" style="margin-top:10px">Save notes</button>
+  </form>
+ </aside>
+</div>
+{% endblock %}

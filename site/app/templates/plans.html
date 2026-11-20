@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero, band, video %}
+{% block title %}Maintenance Plans – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Maintenance Plans", "Maintenance subscription plans", "Pick a plan, choose the services you want during the year, and we'll schedule them for you. Members get no call-out fee and $" ~ c.MEMBER_HOURLY ~ "/h on extra work.") }}
+<section><div class="wrap">
+ <div class="plans">
+  {% for p in c.PLANS %}
+  <div class="plan {{ p.key }} {{ 'pop' if p.popular }}">{% if p.popular %}<span class="badge">Most popular</span>{% endif %}
+   <div class="tier"><span class="medal"></span>{{ p.name }}</div>
+   <div class="price"><b>${{ p.price }}</b><span>/ month</span></div><div class="sub">12-month membership</div>
+   <div class="count">{{ icon('calendar') }} {{ p.services }} services a year, your choice</div>
+   <ul>{% for perk in p.perks %}<li>{{ icon('check') }}{{ perk }}</li>{% endfor %}</ul>
+   <a class="btn {{ 'btn-blue' if p.popular else 'btn-line' }}" href="/subscribe/{{ p.key }}">Subscribe</a>
+  </div>
+  {% endfor %}
+ </div>
+</div></section>
+<section class="white"><div class="wrap two">
+ <div>
+  <div class="eyebrow">How it works</div><h2 style="margin:10px 0 18px">Services to choose from</h2>
+  <p class="lead" style="margin-bottom:24px">When you subscribe, pick the services you want for the year. We'll book each visit at a time that suits you.</p>
+  <div class="chips">{% for ic, t in c.PLAN_SERVICES %}<span class="chip">{{ icon(ic) }}{{ t }}</span>{% endfor %}</div>
+  <ol class="howto">
+   <li><b>Choose a plan</b> — Bronze, Silver or Gold.</li>
+   <li><b>Pick your services</b> from the list above.</li>
+   <li><b>We call you</b> to confirm the first visit and set up monthly payment.</li>
+  </ol>
+ </div>
+ {{ video("How the subscription works", "Presentation video") }}
+</div></section>
+{{ band("Questions about the plans?", "Call Ben or Ash and we'll help you pick the right plan for your property.") }}
+{% endblock %}

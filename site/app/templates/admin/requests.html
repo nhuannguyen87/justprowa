@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% block title %}Requests{% endblock %}
+{% block content %}
+<div class="ahead"><div><h1>Requests</h1><p class="note">Quotes, call-outs and subscriber requests from the website.</p></div></div>
+<div class="stats">
+ {% for k, label in c.STATUSES.items() %}<a href="/admin?status={{ k }}" class="stat {{ 'on' if status == k }}"><b>{{ by_status.get(k, 0) }}</b><span class="badge-s s-{{ k }}">{{ label }}</span></a>{% endfor %}
+</div>
+<form class="filters" method="get" action="/admin">
+ <input class="inp" name="q" value="{{ q }}" placeholder="Search name, subject, address, email, phone">
+ <select class="inp" name="status"><option value="">All statuses</option>{% for k, l in c.STATUSES.items() %}<option value="{{ k }}" {{ 'selected' if status == k }}>{{ l }}</option>{% endfor %}</select>
+ <select class="inp" name="kind"><option value="">All types</option>{% for k, l in c.REQUEST_KINDS.items() %}<option value="{{ k }}" {{ 'selected' if kind == k }}>{{ l }}</option>{% endfor %}</select>
+ <button class="btn btn-blue btn-sm">Filter</button>{% if q or status or kind %}<a class="btn btn-line btn-sm" href="/admin">Clear</a>{% endif %}
+</form>
+<div class="tablewrap"><table class="tbl">
+ <thead><tr><th>Ref</th><th>Received</th><th>Customer</th><th>Request</th><th>Type</th><th>Files</th><th>Status</th></tr></thead>
+ <tbody>
+ {% for r in rows %}
+ <tr class="{{ 'unread' if r.status == 'new' }}" onclick="location.href='/admin/requests/{{ r.id }}'">
+  <td><a href="/admin/requests/{{ r.id }}"><b>{{ r.ref }}</b></a></td>
+  <td class="nowrap">{{ r.created_at|local('%d %b, %-I:%M %p') }}</td>
+  <td><b>{{ r.full_name }}</b><div class="note">{{ r.phone }}</div></td>
+  <td><b>{{ r.subject }}</b><div class="note clip">{{ r.address }}</div></td>
+  <td class="nowrap">{{ c.REQUEST_KINDS[r.kind] }}</td>
+  <td>{% if r.attachments %}{{ icon('paperclip') }} {{ r.attachments|length }}{% else %}—{% endif %}</td>
+  <td><span class="badge-s s-{{ r.status }}">{{ c.STATUSES[r.status] }}</span></td>
+ </tr>
+ {% else %}
+ <tr><td colspan="7" class="empty">No requests yet. They'll appear here when customers use the quote form.</td></tr>
+ {% endfor %}
+ </tbody>
+</table></div>
+{% endblock %}

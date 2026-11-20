@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% from "_macros.html" import band, video, workcard %}
+{% block content %}
+<div class="hero"><div class="wrap">
+ <div>
+  <div class="eyebrow">Perth property maintenance</div>
+  <h1 style="margin-top:16px">Projects big or small —<br><em>give us a call.</em></h1>
+  <p class="lead">Handyman, carpentry, house renos and year-round property maintenance for homes, rentals and commercial sites across Perth. One local team, one call.</p>
+  <div class="pills"><span class="pill">Handyman</span><span class="pill">Carpentry</span><span class="pill">House Renos</span><span class="pill">Gutter &amp; Solar Cleaning</span><span class="pill">Pressure Washing</span></div>
+  <div class="ctas"><a class="btn btn-cta" href="/quote">{{ icon('file') }} Get a Free Estimate</a><a class="btn btn-ghost" href="/plans">{{ icon('calendar') }} See Maintenance Plans</a></div>
+  <div class="trust"><span>{{ icon('shield') }} ABN {{ biz.abn }}</span><span>{{ icon('star') }} Free estimates with photos</span><span>{{ icon('home') }} Pay-at-settlement option</span></div>
+ </div>
+ {{ video("Meet Just Professional Services", "Presentation video") }}
+</div></div>
+
+<section class="paths"><div class="wrap"><div class="grid">
+ <div class="path"><span class="num">01</span><div class="ic">{{ icon('wrench') }}</div><h3>Maintenance request</h3><p>Something broken or needs attention? Book a call-out — a tradesperson comes to you, quickly.</p><a class="more" href="/quote?type=callout">Book a call-out {{ icon('arrow') }}</a></div>
+ <div class="path feat"><span class="num">02</span><div class="ic">{{ icon('calendar') }}</div><h3>Subscription plans</h3><p>Bronze, Silver or Gold. Choose your services for the year from ${{ c.PLANS[0].price }}/month, with no call-out fees for members.</p><a class="more" href="/plans">Compare plans {{ icon('arrow') }}</a></div>
+ <div class="path"><span class="num">03</span><div class="ic">{{ icon('hammer') }}</div><h3>Quote work &amp; renos</h3><p>Decking, pergolas, kitchens, splashbacks, full renovations. Send photos for a free preliminary estimate.</p><a class="more" href="/quote">Request a quote {{ icon('arrow') }}</a></div>
+</div></div></section>
+
+<section><div class="wrap">
+ <div class="sec-head"><div><div class="eyebrow">Portfolio</div><h2>Our latest work</h2></div><a class="btn btn-line btn-sm" href="/work">View all projects {{ icon('arrow') }}</a></div>
+ <div class="car" data-carousel>
+  <div class="row scroller">{% for w in c.WORK %}{{ workcard(w) }}{% endfor %}</div>
+  <button class="arrow l" data-dir="-1" aria-label="Previous">{{ icon('left') }}</button><button class="arrow r" data-dir="1" aria-label="Next">{{ icon('arrow') }}</button>
+ </div>
+</div></section>
+
+<section class="white"><div class="wrap">
+ <div class="sec-head"><div><div class="eyebrow">Why Just Professional Services</div><h2>Look after your property,<br>not your to-do list</h2></div><p class="lead" style="max-width:440px">A well-maintained property is more attractive to tenants and buyers. We help you stay on top of it all year.</p></div>
+ <div class="why">
+  <div class="it"><div class="ic">{{ icon('shield') }}</div><h3>Protect your investment</h3><p>Keep your property well presented and maximise its value for tenants or buyers.</p></div>
+  <div class="it"><div class="ic">{{ icon('search') }}</div><h3>Preventative maintenance</h3><p>Regular servicing catches small issues before they become big, costly problems.</p></div>
+  <div class="it"><div class="ic">{{ icon('tag') }}</div><h3>No call-out fee for members</h3><p>Subscribers pay no call-out fee and a reduced ${{ c.MEMBER_HOURLY }}/h rate on extra work.</p></div>
+  <div class="it"><div class="ic">{{ icon('key') }}</div><h3>Selling? Pay at settlement</h3><p>Getting ready to sell through an agent? Defer payment until settlement, subject to approval.</p></div>
+ </div>
+</div></section>
+{{ band("Get started today", "Send us a few photos and a short description — we'll come back with a free preliminary estimate.") }}
+{% endblock %}

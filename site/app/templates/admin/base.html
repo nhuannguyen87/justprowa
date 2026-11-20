@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>{% block title %}Admin{% endblock %} – JPS</title>
+<link rel="icon" href="/static/logo.png">
+<link rel="stylesheet" href="/static/style.css?v=2">
+<link rel="stylesheet" href="/static/admin.css?v=2">
+</head>
+<body class="admin">
+<aside class="side">
+ <a class="sbrand" href="/admin"><img src="/static/logo.png" alt=""><div><b>JPS Admin</b><span>Just Professional Services</span></div></a>
+ <nav>
+  <a href="/admin" class="{{ 'on' if apage == 'requests' }}">{{ icon('inbox') }} Requests {% if counts.new %}<em>{{ counts.new }}</em>{% endif %}</a>
+  <a href="/admin/subscriptions" class="{{ 'on' if apage == 'subs' }}">{{ icon('calendar') }} Plan sign-ups {% if counts.subs %}<em>{{ counts.subs }}</em>{% endif %}</a>
+  <a href="/admin/messages" class="{{ 'on' if apage == 'msgs' }}">{{ icon('msg') }} Messages {% if counts.msgs %}<em>{{ counts.msgs }}</em>{% endif %}</a>
+  <a href="/" target="_blank">{{ icon('home') }} View website</a>
+ </nav>
+ <form method="post" action="/admin/logout" class="sout"><span>{{ icon('users') }} {{ admin|capitalize }}</span><button title="Log out">{{ icon('logout') }}</button></form>
+</aside>
+<main class="amain">
+ {% for f in flashes %}<div class="flash {{ f.kind }}">{{ icon('check' if f.kind == 'ok' else 'info') }} {{ f.msg }}</div>{% endfor %}
+ {% block content %}{% endblock %}
+</main>
+</body>
+</html>

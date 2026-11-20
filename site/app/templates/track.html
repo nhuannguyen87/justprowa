@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero %}
+{% block title %}{{ qr.ref }} – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Your request", qr.ref ~ " · " ~ qr.subject, "Sent " ~ (qr.created_at|local) ~ ". You'll see our reply and any quote here.") }}
+<section><div class="wrap two">
+ <div>
+  <div class="panel">
+   <div class="status-row"><span class="badge-s s-{{ qr.status }}">{{ c.STATUSES[qr.status] }}</span><span class="note">{{ c.REQUEST_KINDS[qr.kind] }}</span></div>
+   <ol class="progress">
+    {% set order = ['new','reviewing','quoted','accepted','scheduled','completed'] %}
+    {% set idx = order.index(qr.status) if qr.status in order else -1 %}
+    {% for s in order %}<li class="{{ 'done' if loop.index0 <= idx }}">{{ c.STATUSES[s] if s != 'new' else 'Received' }}</li>{% endfor %}
+   </ol>
+  </div>
+
+  {% if latest_quote and qr.status == 'quoted' %}
+  <div class="panel quotebox">
+   <div class="note">Our quote</div>
+   <div class="qamount">{{ latest_quote.amount_cents|money }}</div>
+   <p class="note">Incl. GST. Sent {{ latest_quote.created_at|local }}. See the message below for details.</p>
+   <div class="ctas">
+    <form method="post" action="/track/{{ qr.token }}/accept"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn btn-cta">{{ icon('check') }} Accept quote</button></form>
+    <form method="post" action="/track/{{ qr.token }}/decline"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn btn-line">Decline</button></form>
+   </div>
+   {% if payments_enabled() %}<p class="note" style="margin-top:12px">You'll be able to pay online once accepted.</p>{% endif %}
+  </div>
+  {% elif latest_quote and qr.status == 'accepted' %}
+  <div class="panel quotebox ok"><div class="note">Quote accepted</div><div class="qamount">{{ latest_quote.amount_cents|money }}</div><p class="note">Thanks! We'll contact you to schedule the work.</p></div>
+  {% endif %}
+
+  <h3 style="margin:30px 0 14px">Messages from our team</h3>
+  {% for r in responses %}
+  <div class="msg"><div class="msg-h"><b>{{ r.author|capitalize }} · Just Professional Services</b><span class="note">{{ r.created_at|local }}</span></div>
+   <p>{{ r.message }}</p>{% if r.amount_cents is not none %}<div class="msg-amt">Quoted: <b>{{ r.amount_cents|money }}</b></div>{% endif %}</div>
+  {% else %}
+  <div class="panel note">No reply yet — we usually respond within one business day. Need it sooner? Call Ben on 0424 595 086.</div>
+  {% endfor %}
+ </div>
+ <aside class="panel">
+  <h3 style="margin-bottom:14px">Your details</h3>
+  <dl class="dl">
+   <dt>Address</dt><dd>{{ qr.address }}</dd>
+   <dt>Preferred days</dt><dd>{{ qr.preferred_days|days }}</dd>
+   <dt>Contact</dt><dd>{{ qr.full_name }}<br>{{ qr.phone }}<br>{{ qr.email }}</dd>
+   <dt>Description</dt><dd class="pre">{{ qr.description }}</dd>
+   <dt>Files sent</dt><dd>{{ qr.attachments|length }}</dd>
+  </dl>
+ </aside>
+</div></section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "_macros.html" import phero %}
+{% block title %}Terms & Policies – Just Professional Services{% endblock %}
+{% block content %}
+{{ phero("Terms & Policies", "Terms & policies", "Terms & Conditions and Quotation Fee & Payment Policy — Just Professional Services, ABN " ~ biz.abn ~ ".") }}
+<section><div class="wrap terms">
+ <div><nav class="toc"><a href="#terms">Terms &amp; Conditions</a><a href="#quotation">Quotation Fee Policy</a><a href="#settlement">Payment at Settlement</a><a href="#privacy">Privacy</a></nav></div>
+ <div>
+  <div class="callout" style="margin-bottom:12px">{{ icon('info') }}<div><b>In short</b><div class="note" style="margin-top:4px">Free estimates when you send photos. A {{ c.QUOTE_FEE_PERCENT }}% quotation fee applies only to jobs over ${{ '{:,}'.format(c.QUOTE_FEE_THRESHOLD) }} or complex works — and it's deducted if you go ahead. Selling? You can pay at settlement ({{ c.SETTLEMENT_SURCHARGE }}% surcharge). Nothing is charged without your approval.</div></div></div>
+  <h2 id="terms" class="anchor">Terms &amp; Conditions</h2>
+  {% for h, t in c.TERMS %}<div class="clause" {% if h == 'Privacy' %}id="privacy"{% endif %}><h3><span>{{ '%02d'|format(loop.index) }}</span>{{ h }}</h3><p>{{ t }}</p></div>{% endfor %}
+  <h2 id="quotation" class="anchor" style="margin-top:48px">Quotation Fee &amp; Payment Policy</h2>
+  {% for h, t in c.QUOTE_POLICY %}<div class="clause" {% if h == 'Payment at settlement' %}id="settlement"{% endif %}><h3>{{ h }}</h3><p>{{ t }}</p></div>{% endfor %}
+ </div>
+</div></section>
+{% endblock %}

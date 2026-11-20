@@ -1,0 +1,12 @@
+{% extends "admin/base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<div class="ahead"><div><h1>Messages</h1><p class="note">From the Contact page.</p></div></div>
+{% for m in rows %}
+<div class="panel msgcard {{ 'done' if m.handled }}">
+ <div class="msg-h"><div><b>{{ m.full_name }}</b> <span class="note">· <a href="mailto:{{ m.email }}">{{ m.email }}</a>{% if m.phone %} · <a href="tel:{{ m.phone|replace(' ','') }}">{{ m.phone }}</a>{% endif %}</span></div><span class="note">{{ m.created_at|local }}</span></div>
+ <p class="pre">{{ m.message }}</p>
+ <form method="post" action="/admin/messages/{{ m.id }}/toggle"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn btn-sm {{ 'btn-line' if m.handled else 'btn-blue' }}">{{ 'Mark as not handled' if m.handled else 'Mark as handled' }}</button></form>
+</div>
+{% else %}<div class="panel empty">No messages yet.</div>{% endfor %}
+{% endblock %}

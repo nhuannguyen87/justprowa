@@ -1,0 +1,23 @@
+{% extends "admin/base.html" %}
+{% block title %}Plan sign-ups{% endblock %}
+{% block content %}
+<div class="ahead"><div><h1>Plan sign-ups</h1><p class="note">Customers who chose a Bronze, Silver or Gold plan. Call them to confirm, then mark Active.</p></div></div>
+<div class="tablewrap"><table class="tbl">
+ <thead><tr><th>Received</th><th>Customer</th><th>Plan</th><th>Services</th><th>Address</th><th>Status</th></tr></thead>
+ <tbody>
+ {% for s in rows %}{% set p = c.PLANS_BY_KEY[s.plan] %}
+ <tr>
+  <td class="nowrap">{{ s.created_at|local('%d %b %Y') }}</td>
+  <td><b>{{ s.full_name }}</b><div class="note"><a href="tel:{{ s.phone|replace(' ','') }}">{{ s.phone }}</a> · <a href="mailto:{{ s.email }}">{{ s.email }}</a></div>{% if s.notes %}<div class="note">“{{ s.notes }}”</div>{% endif %}</td>
+  <td class="nowrap"><b>{{ p.name }}</b><div class="note">${{ p.price }}/mo</div></td>
+  <td>{{ s.services }}</td>
+  <td>{{ s.address }}</td>
+  <td><form method="post" action="/admin/subscriptions/{{ s.id }}/status" class="inline">
+   <input type="hidden" name="csrf" value="{{ csrf }}">
+   <select class="inp sm s-{{ s.status }}" name="status" onchange="this.form.submit()">{% for k in ['pending','active','cancelled'] %}<option value="{{ k }}" {{ 'selected' if s.status == k }}>{{ k|capitalize }}</option>{% endfor %}</select>
+  </form></td>
+ </tr>
+ {% else %}<tr><td colspan="6" class="empty">No plan sign-ups yet.</td></tr>{% endfor %}
+ </tbody>
+</table></div>
+{% endblock %}

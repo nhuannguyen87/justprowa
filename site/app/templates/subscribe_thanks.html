@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section><div class="wrap narrow">
+ <div class="panel center">
+  <div class="okmark">{{ icon('check') }}</div>
+  <h1 class="h2">Thanks, {{ sub.full_name.split()[0] }}! Your {{ plan.name }} plan request is in.</h1>
+  <p class="lead" style="margin:14px auto 0">We'll call you on {{ sub.phone }} to confirm your first visit and set up the ${{ plan.price }}/month payment.</p>
+  <p class="note" style="margin-top:14px">Services chosen: {{ sub.services }}</p>
+  <div class="ctas center-row"><a class="btn btn-line" href="/">Back to home</a></div>
+ </div>
+</div></section>
+{% endblock %}
